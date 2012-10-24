@@ -1,0 +1,14 @@
+{% extends "layout-split-2.html" %}
+{% block left %}
+<div class="module">
+	{% for app_name, template_tuples in templates.items %}
+	<h3>{{ app_name }}</h3>
+	<ul>
+		{% for template_path, template_name in template_tuples %}
+		<li><a href="/message_editor/{{ template_path }}">{{ template_name }}</a></li>
+		{% endfor %}
+	</ul>
+
+{% endfor %}
+</div>
+{% endblock %}

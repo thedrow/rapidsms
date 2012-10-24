@@ -5,6 +5,8 @@ import sys
 import os
 import pkgutil
 
+from pystache.loader import Loader
+
 from ..utils.modules import try_import, get_class
 from ..log.mixin import LoggerMixin
 
@@ -41,6 +43,25 @@ class AppBase(object, LoggerMixin):
         """
 
         return self.__module__.split(".")[-2]
+
+    def templates(self, template_name):
+        """
+        Convenince method to load a mustache template by name
+        """
+        return self.loader.load_name(template_name)
+
+    def loader(self):
+        """
+        Return a pystache template loader for this app's message templates
+        """
+        return Loader(extension='mustache', search_dirs=[self.messages_directory,])
+
+    @property
+    def messages_directory(self):
+        """
+        Return the path for this app's messages directory
+        """
+        return os.path.join(self._get_root_path(), 'messages')
 
     @property
     def root_path(self):

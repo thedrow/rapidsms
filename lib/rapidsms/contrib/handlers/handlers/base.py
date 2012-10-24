@@ -17,6 +17,17 @@ class BaseHandler(object, LoggerMixin):
     def __init__(self, router, msg):
         self.router = router
         self.msg = msg
+        # find app this handler belongs to
+        self.app = router.get_app(self.app_name)
+        # get app's template loader
+        self.loader = self.app.loader()
+        # convenince method for loading a mustache template by name
+        self.templates = lambda t: self.loader.load_name(t)
+
+    @property
+    def app_name(self):
+        # TODO this is shameful
+        return '.'.join(self.__module__.split(".")[:-2])
 
     def respond(self, template=None, **kwargs):
         return self.msg.respond(template, **kwargs)

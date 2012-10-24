@@ -1,0 +1,13 @@
+{% extends "layout-split-2.html" %}
+{% block left %}
+<div class="module">
+<h3>{{ template_path }}</h3>
+<form method='POST' action='/message_editor/{{ template_path }}'>
+<textarea name='template_content' cols='80' rows='2'>
+{{ template_content}}
+</textarea>
+<input type="submit" value="Submit"/>
+{% csrf_token %}
+</form>
+</div>
+{% endblock %}
