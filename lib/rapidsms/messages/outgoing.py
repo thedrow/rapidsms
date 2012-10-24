@@ -4,6 +4,7 @@
 
 from datetime import datetime
 from django.utils.translation.trans_real import translation
+import pystache
 from .base import MessageBase
 from ..errors import NoRouterError
 from ..conf import settings
@@ -50,7 +51,12 @@ class OutgoingMessage(MessageBase):
     def _render_part(self, template, **kwargs):
         t = translation(self.language)
         tmpl = t.gettext(template)
-        return tmpl % kwargs
+        # try python string formatting
+        rendered = tmpl % kwargs
+        if rendered == tmpl:
+            # if nothing has changed, try mustache
+            rendered = pystache.render(tmpl, kwargs)
+        return rendered
 
 
     @property
