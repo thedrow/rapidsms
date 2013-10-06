@@ -6,6 +6,8 @@ from django.db import models
 from .utils.modules import try_import, get_classes
 from .conf import settings
 
+from caching.base import CachingManager, CachingMixin
+
 
 class ExtensibleModelBase(models.base.ModelBase):
     def __new__(cls, name, bases, attrs):
@@ -37,7 +39,7 @@ def _find_extensions(app_label, model_name):
     return ext
 
 
-class Backend(models.Model):
+class Backend(CachingMixin, models.Model):
     """
     This model isn't really a backend. Those are regular Python classes,
     in rapidsms/backends. This is just a stub model to provide a primary
@@ -47,6 +49,8 @@ class Backend(models.Model):
 
     #: the name of the backend
     name = models.CharField(max_length=20, unique=True)
+
+    objects = CachingManager()
 
     def __unicode__(self):
         return self.name
@@ -134,7 +138,7 @@ class Contact(ContactBase):
     __metaclass__ = ExtensibleModelBase
 
 
-class ConnectionBase(models.Model):
+class ConnectionBase(CachingMixin, models.Model):
     #: foreign key to this connection's
     #: :py:class:`~rapidsms.backends.base.BackendBase`
     backend = models.ForeignKey(Backend)
@@ -147,6 +151,8 @@ class ConnectionBase(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     #: when this connection was last modified
     modified_on = models.DateTimeField(auto_now=True)
+
+    objects = CachingManager()
 
     class Meta:
         abstract = True

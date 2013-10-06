@@ -26,6 +26,7 @@ setup(
         "django-tables2==0.13.0",
         "djappsettings==0.1.0",
         "django-selectable==0.7.0",
+        "django-cache-machine==0.8",
     ],
 
     test_requires=[
